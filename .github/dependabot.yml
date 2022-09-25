@@ -5,7 +5,15 @@
 
 version: 2
 updates:
-  - package-ecosystem: "nuget" # See documentation for possible values
+
+  # Maintain dependencies for NuGet
+  - package-ecosystem: "nuget"
     directory: "/" # Location of package manifests
     schedule:
-      interval: "weekly"
+      interval: "daily"
+      
+  # Maintain dependencies for gitsubmodule
+  - package-ecosystem: "gitsubmodule"
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "daily"
