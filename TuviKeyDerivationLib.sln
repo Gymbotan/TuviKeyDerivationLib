@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyDerivationLib", "KeyDerivationLib\KeyDerivationLib.csproj", "{1C9240F1-690F-487E-8D61-DCFAD19DEFAF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyDerivation", "KeyDerivationInterface\KeyDerivation.csproj", "{4FC13D77-E798-4369-B549-80CFB4BEB864}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1C9240F1-690F-487E-8D61-DCFAD19DEFAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C9240F1-690F-487E-8D61-DCFAD19DEFAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C9240F1-690F-487E-8D61-DCFAD19DEFAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C9240F1-690F-487E-8D61-DCFAD19DEFAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FC13D77-E798-4369-B549-80CFB4BEB864}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FC13D77-E798-4369-B549-80CFB4BEB864}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FC13D77-E798-4369-B549-80CFB4BEB864}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FC13D77-E798-4369-B549-80CFB4BEB864}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1BA76DBA-74AD-4433-BD71-DA7A1C68640A}
+	EndGlobalSection
+EndGlobal
