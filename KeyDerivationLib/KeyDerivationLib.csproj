@@ -18,9 +18,11 @@
 
   <ItemGroup>
     <PackageReference Include="NBitcoin" Version="7.0.14" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\TuviBase32EConverterLib\TuviBytesToEmailConverterLib\TuviBase32EConverterLib\TuviBase32EConverterLib.csproj" />
     <ProjectReference Include="..\KeyDerivationInterface\KeyDerivation.csproj" />
   </ItemGroup>
 
