@@ -1,3 +1,6 @@
 [submodule "TuviBytesShamirSecretSharingLib"]
 	path = gitmodules/TuviBytesShamirSecretSharingLib
 	url = ../TuviBytesShamirSecretSharingLib.git
+[submodule "gitmodules/TuviBase32EConverterLib"]
+	path = gitmodules/TuviBase32EConverterLib
+	url = https://github.com/Gymbotan/TuviBase32EConverterLib.git
