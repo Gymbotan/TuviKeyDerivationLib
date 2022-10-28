@@ -13,6 +13,10 @@ namespace KeyDerivationLib
 {
     public static class PublicKeyConverter
     {
+        private const int ExpectedEmailNameLength = 53;
+        private const int CaseCompressionYTildeIsFalse = 2;
+        private const int CaseCompressionYTildeIsTrue = 3;
+
         /// <summary>
         /// Converts public key into email's name using Base32EConverter.
         /// </summary>
@@ -41,7 +45,7 @@ namespace KeyDerivationLib
                 throw new ArgumentNullException(nameof(name));
             }
 
-            if (name.Length != 53)
+            if (name.Length != ExpectedEmailNameLength)
             {
                 throw new ArgumentException("Incorrect length of email name.", nameof(name));
             }
@@ -54,7 +58,7 @@ namespace KeyDerivationLib
 
             var encodedKey = Base32EConverter.ConvertStringToByteArray(name);
 
-            if (encodedKey[0] == 2 || encodedKey[0] == 3)
+            if (encodedKey[0] == CaseCompressionYTildeIsFalse || encodedKey[0] == CaseCompressionYTildeIsTrue)
             {
                 ECCurve curve = keyParams.DomainParameters.Curve;
                 var point = curve.DecodePoint(encodedKey);
