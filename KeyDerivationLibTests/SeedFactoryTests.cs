@@ -1,0 +1,113 @@
+﻿using Entities;
+using KeyDerivation;
+using KeyDerivationLib;
+
+namespace KeyDerivationLibTests
+{
+    internal class TestKeyDerivationDetailsProvider : IKeyDerivationDetailsProvider
+    {
+        public string GetSaltPhrase()
+        {
+            return "Bla-bla";
+        }
+
+        public int GetSeedPhraseLength()
+        {
+            return 12;
+        }
+
+        public Dictionary<SpecialPgpKeyType, string> GetSpecialPgpKeyIdentities()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class SeedFactoryTests
+    {
+        private IKeyDerivationDetailsProvider KeyDerivationDetails = new TestKeyDerivationDetailsProvider();
+        private MasterKeyFactory KeyFactory;
+
+        [OneTimeSetUp]
+        public void Setup()
+        {
+            KeyFactory = new MasterKeyFactory(KeyDerivationDetails);
+        }
+
+        [Test]
+        public void GenerateSeedPhrase()
+        {
+            string[] seed = KeyFactory.GenerateSeedPhrase();
+
+            Assert.AreEqual(seed.Length, KeyDerivationDetails.GetSeedPhraseLength(), "Seed phrase has to contain not less than 12 words");
+            foreach (var word in seed)
+            {
+                Assert.IsNotEmpty(word);
+            }
+        }
+
+        [Test]
+        public void GetMasterKey()
+        {
+            string[] seed = KeyFactory.GenerateSeedPhrase();
+            MasterKey key = KeyFactory.GetMasterKey();
+
+            Assert.AreEqual(KeySerialization.PrivateKeyLength, key.Scalar.Length, "Master key scalar length is wrong");
+            Assert.AreEqual(KeySerialization.KeyChainCodeLength, key.ChainCode.Length, "Key chain code length is wrong");
+        }
+
+        [Test]
+        public void IsWordExistInDictionary()
+        {
+            foreach (var pair in TestData.GetDictionaryTestData())
+            {
+                string word = pair.Key;
+                bool isExist = pair.Value;
+
+                Assert.That(MasterKeyFactory.IsWordExistInDictionary(word) == isExist);
+            }
+        }
+
+        [Test]
+        public void IsNullWordExistInDictionary()
+        {
+            string nullWord = null;
+
+            Assert.Throws<NullReferenceException>(() => MasterKeyFactory.IsWordExistInDictionary(nullWord));
+        }
+
+        [Test]
+        public void OnlyExistingWordsInGeneratedSeed()
+        {
+            string[] seed = KeyFactory.GenerateSeedPhrase();
+            foreach (var word in seed)
+            {
+                Assert.IsTrue(MasterKeyFactory.IsWordExistInDictionary(word));
+            }
+        }
+
+        [Test]
+        public void RestoreKeySuccess()
+        {
+            string[] seed = KeyFactory.GenerateSeedPhrase();
+            MasterKey originalKey = KeyFactory.GetMasterKey();
+
+            KeyFactory.RestoreSeedPhrase(seed);
+            MasterKey restoredKey = KeyFactory.GetMasterKey();
+
+            Assert.AreEqual(originalKey, restoredKey);
+        }
+
+        [Test]
+        public void RestoreKeyFail()
+        {
+            string[] randomSeed = KeyFactory.GenerateSeedPhrase();
+            MasterKey randomKey = KeyFactory.GetMasterKey();
+
+            KeyFactory.RestoreSeedPhrase(TestData.GetTestSeed());
+            MasterKey restoredKey = KeyFactory.GetMasterKey();
+
+            Assert.AreNotEqual(TestData.GetTestSeed(), randomSeed);
+            Assert.AreNotEqual(restoredKey, randomKey);
+        }
+    }
+}
