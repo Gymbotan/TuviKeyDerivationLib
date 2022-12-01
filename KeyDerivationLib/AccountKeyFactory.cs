@@ -30,8 +30,8 @@ namespace KeyDerivationLib
         {
             byte[] hashInput = masterKey.ToByteBuffer();
 
-            byte[] hashkey = Encoding.UTF8.GetBytes(userId);
-            var hashMAC = Hashes.HMACSHA512(hashkey, hashInput);
+            byte[] hashKey = Encoding.UTF8.GetBytes(userId);
+            var hashMAC = Hashes.HMACSHA512(hashKey, hashInput);
 
             return hashMAC.ToPrivateKey();
         }

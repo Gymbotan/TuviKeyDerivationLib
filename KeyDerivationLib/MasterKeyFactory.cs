@@ -83,10 +83,10 @@ namespace KeyDerivationLib
             }
 
             string ApplicationHashKey = Provider.GetSaltPhrase();
-            byte[] hashkey = Encoders.ASCII.DecodeData(ApplicationHashKey);
+            byte[] hashKey = Encoders.ASCII.DecodeData(ApplicationHashKey);
 
             byte[] seed = Mnemonic.DeriveSeed();
-            var hashMAC = Hashes.HMACSHA512(hashkey, seed);
+            var hashMAC = Hashes.HMACSHA512(hashKey, seed);
 
             return hashMAC.ToMasterKey();
         }
