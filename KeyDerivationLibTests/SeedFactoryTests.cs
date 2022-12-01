@@ -22,7 +22,7 @@ namespace KeyDerivationLibTests
         }
     }
 
-    internal class SeedFactoryTests
+    public class SeedFactoryTests
     {
         private IKeyDerivationDetailsProvider KeyDerivationDetails = new TestKeyDerivationDetailsProvider();
         private MasterKeyFactory KeyFactory;
@@ -38,7 +38,7 @@ namespace KeyDerivationLibTests
         {
             string[] seed = KeyFactory.GenerateSeedPhrase();
 
-            Assert.AreEqual(seed.Length, KeyDerivationDetails.GetSeedPhraseLength(), "Seed phrase has to contain not less than 12 words");
+            Assert.That(KeyDerivationDetails.GetSeedPhraseLength(), Is.EqualTo(seed.Length), "Seed phrase has to contain not less than 12 words");
             foreach (var word in seed)
             {
                 Assert.IsNotEmpty(word);
@@ -51,8 +51,8 @@ namespace KeyDerivationLibTests
             string[] seed = KeyFactory.GenerateSeedPhrase();
             MasterKey key = KeyFactory.GetMasterKey();
 
-            Assert.AreEqual(KeySerialization.PrivateKeyLength, key.Scalar.Length, "Master key scalar length is wrong");
-            Assert.AreEqual(KeySerialization.KeyChainCodeLength, key.ChainCode.Length, "Key chain code length is wrong");
+            Assert.That(key.Scalar.Length, Is.EqualTo(KeySerialization.PrivateKeyLength), "Master key scalar length is wrong");
+            Assert.That(key.ChainCode.Length, Is.EqualTo(KeySerialization.KeyChainCodeLength), "Key chain code length is wrong");
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace KeyDerivationLibTests
         [Test]
         public void IsNullWordExistInDictionary()
         {
-            string nullWord = null;
+            string? nullWord = null;
 
             Assert.Throws<NullReferenceException>(() => MasterKeyFactory.IsWordExistInDictionary(nullWord));
         }
@@ -94,7 +94,7 @@ namespace KeyDerivationLibTests
             KeyFactory.RestoreSeedPhrase(seed);
             MasterKey restoredKey = KeyFactory.GetMasterKey();
 
-            Assert.AreEqual(originalKey, restoredKey);
+            Assert.That(restoredKey, Is.EqualTo(originalKey));
         }
 
         [Test]
@@ -106,8 +106,8 @@ namespace KeyDerivationLibTests
             KeyFactory.RestoreSeedPhrase(TestData.GetTestSeed());
             MasterKey restoredKey = KeyFactory.GetMasterKey();
 
-            Assert.AreNotEqual(TestData.GetTestSeed(), randomSeed);
-            Assert.AreNotEqual(restoredKey, randomKey);
+            Assert.That(randomSeed, Is.Not.EqualTo(TestData.GetTestSeed()));
+            Assert.That(randomKey, Is.Not.EqualTo(restoredKey));
         }
     }
 }

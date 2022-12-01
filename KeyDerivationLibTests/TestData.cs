@@ -96,8 +96,8 @@ namespace KeyDerivationLibTests
 
         public class TestAccount
         {
-            public string Name;
-            public string Address;
+            public string Name = "";
+            public string Address = "";
 
             public MailboxAddress GetMailbox()
             {
@@ -115,6 +115,6 @@ namespace KeyDerivationLibTests
             return new TestAccount { Address = "ivan@ivanov.net", Name = "Ivan Ivanov" };
         }
 
-        public static readonly string WrongPgpIdentity = "abra-cadabra...";
+        public const string WrongPgpIdentity = "abra-cadabra...";
     }
 }

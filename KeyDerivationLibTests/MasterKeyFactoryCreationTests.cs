@@ -3,10 +3,10 @@ using KeyDerivationLib;
 
 namespace KeyDerivationLibTests
 {
-    public class KeyDerivationLibTests
+    public class MasterKeyFactoryCreationTests
     {
         [Test]
-        public void MasterKeyFactoryCreation_NullProvider_ThrowArgumentNullException()
+        public void MasterKeyFactoryCreationNullProviderThrowArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() => new MasterKeyFactory(null),
                 message: "Provider can not be a null.");
@@ -18,7 +18,7 @@ namespace KeyDerivationLibTests
         [TestCase(18)]
         [TestCase(21)]
         [TestCase(24)]
-        public void MasterKeyFactoryCreation_WrongSeedPhraseLength_ThrowArgumentException(int length)
+        public void MasterKeyFactoryCreationWrongSeedPhraseLengthThrowArgumentException(int length)
         {
             var mock = new Mock<IKeyDerivationDetailsProvider>();
             mock.Setup(a => a.GetSeedPhraseLength()).Returns(length);
@@ -28,7 +28,7 @@ namespace KeyDerivationLibTests
         }
 
         [Test]
-        public void MasterKeyFactoryCreation_SuccessfulCreation()
+        public void MasterKeyFactoryCreationSuccessfulCreation()
         {
             var mock = new Mock<IKeyDerivationDetailsProvider>();
             mock.Setup(a => a.GetSeedPhraseLength()).Returns(12);
@@ -37,7 +37,7 @@ namespace KeyDerivationLibTests
         }
         
         [Test]
-        public void GetMasterKey_NullMnemonic_ThrowArgumentNullException()
+        public void GetMasterKeyNullMnemonicThrowArgumentNullException()
         {
             var mock = new Mock<IKeyDerivationDetailsProvider>();
             mock.Setup(a => a.GetSeedPhraseLength()).Returns(12);

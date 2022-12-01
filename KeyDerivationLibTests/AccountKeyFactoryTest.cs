@@ -2,7 +2,7 @@
 
 namespace KeyDerivationLibTests
 {
-    internal class AccountKeyFactoryTest
+    public class AccountKeyFactoryTest
     {
         [Test]
         public void AccountKeysAreDeterministic()
@@ -10,8 +10,8 @@ namespace KeyDerivationLibTests
             var key1 = AccountKeyFactory.DeriveAccountKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
             var key2 = AccountKeyFactory.DeriveAccountKey(TestData.MasterKey, TestData.WrongPgpIdentity);
 
-            Assert.AreEqual(key1, TestData.AccountKey1, "Key is not same as predicted");
-            Assert.AreEqual(key2, TestData.AccountKey2, "Key is not same as predicted");
+            Assert.That(TestData.AccountKey1, Is.EqualTo(key1), "Key is not same as predicted");
+            Assert.That(TestData.AccountKey2, Is.EqualTo(key2), "Key is not same as predicted");
         }
 
         [Test]
@@ -20,7 +20,7 @@ namespace KeyDerivationLibTests
             var key1 = AccountKeyFactory.DeriveAccountKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
             var key2 = AccountKeyFactory.DeriveAccountKey(TestData.MasterKey2, TestData.GetAccount().GetPgpIdentity());
 
-            Assert.AreNotEqual(key1, key2, "Keys with different MasterKey have to be different too");
+            Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different MasterKey have to be different too");
         }
 
         [Test]
@@ -29,7 +29,7 @@ namespace KeyDerivationLibTests
             var key1 = AccountKeyFactory.DeriveAccountKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
             var key2 = AccountKeyFactory.DeriveAccountKey(TestData.MasterKey, TestData.WrongPgpIdentity);
 
-            Assert.AreNotEqual(key1, key2, "Keys with different userId have to be different too");
+            Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different userId have to be different too");
         }
 
         [Test]
@@ -38,8 +38,8 @@ namespace KeyDerivationLibTests
             var key1 = AccountKeyFactory.DeriveAccountChildKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity(), 0);
             var key2 = AccountKeyFactory.DeriveAccountChildKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity(), 1);
 
-            Assert.AreEqual(key1, TestData.ChildKey1, "Key is not same as predicted");
-            Assert.AreEqual(key2, TestData.ChildKey2, "Key is not same as predicted");
+            Assert.That(TestData.ChildKey1, Is.EqualTo(key1), "Key is not same as predicted");
+            Assert.That(TestData.ChildKey2, Is.EqualTo(key2), "Key is not same as predicted");
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace KeyDerivationLibTests
             var key1 = AccountKeyFactory.DeriveAccountChildKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity(), 0);
             var key2 = AccountKeyFactory.DeriveAccountChildKey(TestData.MasterKey2, TestData.GetAccount().GetPgpIdentity(), 0);
 
-            Assert.AreNotEqual(key1, key2, "Keys with different MasterKey have to be different too");
+            Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different MasterKey have to be different too");
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace KeyDerivationLibTests
             var key1 = AccountKeyFactory.DeriveAccountChildKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity(), 0);
             var key2 = AccountKeyFactory.DeriveAccountChildKey(TestData.MasterKey, TestData.WrongPgpIdentity, 0);
 
-            Assert.AreNotEqual(key1, key2, "Keys with different userId have to be different too");
+            Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different userId have to be different too");
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace KeyDerivationLibTests
             var key1 = AccountKeyFactory.DeriveAccountChildKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity(), 0);
             var key2 = AccountKeyFactory.DeriveAccountChildKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity(), 1);
 
-            Assert.AreNotEqual(key1, key2, "Keys with different KeyIndex have to be different too");
+            Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different KeyIndex have to be different too");
         }
     }
 }

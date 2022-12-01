@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace KeyDerivationLibTests
 {
-    internal class KeySerializationTest
+    public class KeySerializationTest
     {
         [Test]
         public void SerializeDeserializePrivateKey()
@@ -25,7 +25,7 @@ namespace KeyDerivationLibTests
             var buffer = TestData.MasterKey.ToByteBuffer();
             MasterKey masterKey = buffer.ToMasterKey();
 
-            Assert.AreEqual(TestData.MasterKey, masterKey);
+            Assert.That(masterKey, Is.EqualTo(TestData.MasterKey));
         }
     }
 }
