@@ -30,10 +30,10 @@ namespace KeyDerivationLibTests
         [Test]
         public void MasterKeyFactoryCreationSuccessfulCreation()
         {
+            int correctMnemonicLength = 12;
             var mock = new Mock<IKeyDerivationDetailsProvider>();
-            mock.Setup(a => a.GetSeedPhraseLength()).Returns(12);
-            MasterKeyFactory factory = new MasterKeyFactory(mock.Object);
-            Assert.Pass();
+            mock.Setup(a => a.GetSeedPhraseLength()).Returns(correctMnemonicLength);
+            Assert.DoesNotThrow(() => new MasterKeyFactory(mock.Object), "Exception was thrown but shouldn't.");
         }
         
         [Test]
