@@ -82,11 +82,11 @@ namespace KeyDerivationLib
                 throw new ArgumentNullException(nameof(Mnemonic));
             }
 
-            string ApplicationHaskKey = Provider.GetSaltPhrase();
-            byte[] hashkey = Encoders.ASCII.DecodeData(ApplicationHaskKey);
+            string ApplicationHashKey = Provider.GetSaltPhrase();
+            byte[] hashKey = Encoders.ASCII.DecodeData(ApplicationHashKey);
 
             byte[] seed = Mnemonic.DeriveSeed();
-            var hashMAC = Hashes.HMACSHA512(hashkey, seed);
+            var hashMAC = Hashes.HMACSHA512(hashKey, seed);
 
             return hashMAC.ToMasterKey();
         }

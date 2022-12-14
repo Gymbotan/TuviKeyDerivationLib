@@ -4,3 +4,5 @@
 /KeyDerivationLib/.vs
 /KeyDerivationLib/bin
 /KeyDerivationLib/obj
+/KeyDerivationLibTests/bin
+/KeyDerivationLibTests/obj
