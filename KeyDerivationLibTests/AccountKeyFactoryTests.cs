@@ -2,7 +2,7 @@
 
 namespace KeyDerivationLibTests
 {
-    public class AccountKeyFactoryTest
+    public class AccountKeyFactoryTests
     {
         [Test]
         public void AccountKeysAreDeterministic()

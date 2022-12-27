@@ -2,7 +2,7 @@
 
 namespace KeyDerivationLibTests
 {
-    public class KeySerializationTest
+    public class KeySerializationTests
     {
         [Test]
         public void SerializeDeserializePrivateKey()
