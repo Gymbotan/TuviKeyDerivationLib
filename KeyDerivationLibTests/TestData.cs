@@ -70,7 +70,7 @@ namespace KeyDerivationLibTests
             }
         };
 
-        public static readonly PrivateDrivationKey AccountKey1 = new MasterKey
+        public static readonly PrivateDrivationKey PrivateDerivationKey1 = new MasterKey
         {
             Scalar = new byte[32]
             {
@@ -84,7 +84,7 @@ namespace KeyDerivationLibTests
             }
         };
 
-        public static readonly PrivateDrivationKey AccountKey2 = new MasterKey
+        public static readonly PrivateDrivationKey PrivateDerivationKey2 = new MasterKey
         {
             Scalar = new byte[32]
             {
@@ -98,39 +98,20 @@ namespace KeyDerivationLibTests
             }
         };
 
-        public static readonly byte[] ChildKey1 = new byte[32]
+        public static readonly byte[] PrivateChildKey1 = new byte[32]
         {
             0x59, 0xfc, 0x97, 0x46, 0x60, 0x58, 0x1e, 0x48, 0x5c, 0x90, 0xd6, 0x48, 0x23, 0x01, 0x44, 0x33,
             0xd1, 0xf9, 0xe8, 0xb3, 0x8b, 0xe8, 0x4a, 0xb5, 0x46, 0x72, 0xbb, 0xc6, 0xa0, 0xf1, 0x0f, 0x12
         };
 
-        public static readonly byte[] ChildKey2 = new byte[32]
+        public static readonly byte[] PrivateChildKey2 = new byte[32]
         {
             0x5d, 0x0c, 0xb9, 0x64, 0x94, 0xa8, 0x00, 0x34, 0x8b, 0xab, 0xd8, 0xb4, 0xc8, 0x2f, 0xa7, 0x49,
             0xf0, 0x41, 0x4e, 0x03, 0x46, 0x3f, 0x9b, 0x90, 0xbd, 0x32, 0x1c, 0x68, 0x12, 0x77, 0x71, 0x86
         };
 
-        public class TestAccount
-        {
-            public string Name = "";
-            public string Address = "";
+        public const string RightTag = "test@user.net";
 
-            public MailboxAddress GetMailbox()
-            {
-                return new MailboxAddress(Name, Address);
-            }
-
-            public string GetPgpIdentity()
-            {
-                return Address;
-            }
-        };
-
-        public static TestAccount GetAccount()
-        {
-            return new TestAccount { Address = "test@user.net", Name = "Test User" };
-        }
-
-        public const string WrongPgpIdentity = "abra-cadabra...";
+        public const string WrongTag = "abra-cadabra...";
     }
 }

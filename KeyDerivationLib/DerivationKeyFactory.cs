@@ -48,7 +48,7 @@ namespace KeyDerivationLib
         /// Derive private child key from private derivation key and it's index.
         /// </summary>
         /// <param name="derivationKey">Private derivation key.</param>
-        /// <param name="index">Child key index.</param>
+        /// <param name="index">Private child key index.</param>
         /// <returns>Private child key.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static byte[] DerivePrivateChildKey(PrivateDrivationKey derivationKey, int index)
