@@ -26,35 +26,42 @@ namespace KeyDerivationLib
     /// Implementation of hierarchical key derivation for separate accounts distinguished with user identities.
     /// Based on BIP-32 hierarchical key derivation.
     /// </summary>
-    public static class AccountKeyFactory
+    public static class DerivationKeyFactory
     {
         /// <summary>
-        /// Account key derivation from master key and user ID (based on BIP-32).
+        /// Derivation key creation from derivation (master) key and key tag (based on BIP-32).
         /// </summary>
-        /// <param name="masterKey">Master key.</param>
-        /// <param name="userId">User ID.</param>
-        /// <returns>Account key.</returns>
-        public static PrivateDrivationKey CreatePrivateDerivationKey(PrivateDrivationKey masterKey, string userId)
+        /// <param name="derivationKey">Derivation key.</param>
+        /// <param name="tag">Tag to identify key(like user ID).</param>
+        /// <returns>Private derivation key.</returns>
+        public static PrivateDrivationKey CreatePrivateDerivationKey(PrivateDrivationKey derivationKey, string tag)
         {
-            byte[] hashInput = masterKey.ToByteBuffer();
+            byte[] hashInput = derivationKey.ToByteBuffer();
 
-            byte[] hashKey = Encoding.UTF8.GetBytes(userId);
+            byte[] hashKey = Encoding.UTF8.GetBytes(tag);
             var hashMAC = Hashes.HMACSHA512(hashKey, hashInput);
 
             return hashMAC.ToPrivateDerivationKey();
         }
 
-        public static byte[] DerivePrivateChildKey(PrivateDrivationKey accountKey, int index)
+        /// <summary>
+        /// Derive private child key from private derivation key and it's index.
+        /// </summary>
+        /// <param name="derivationKey">Private derivation key.</param>
+        /// <param name="index">Child key index.</param>
+        /// <returns>Private child key.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static byte[] DerivePrivateChildKey(PrivateDrivationKey derivationKey, int index)
         {
-            if (accountKey is null)
+            if (derivationKey is null)
             {
-                throw new ArgumentNullException(nameof(accountKey));
+                throw new ArgumentNullException(nameof(derivationKey));
             }
 
-            using (var eccKey = new Key(accountKey.Scalar))
+            using (var eccKey = new Key(derivationKey.Scalar))
             {
-                ExtKey accountExtKey = new ExtKey(eccKey, accountKey.ChainCode);
-                return accountExtKey.Derive(index, true).PrivateKey.ToBytes();
+                ExtKey derivationExtKey = new ExtKey(eccKey, derivationKey.ChainCode);
+                return derivationExtKey.Derive(index, true).PrivateKey.ToBytes();
             }
         }
     }

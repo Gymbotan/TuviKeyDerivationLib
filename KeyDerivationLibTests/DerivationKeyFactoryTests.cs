@@ -18,13 +18,13 @@ using KeyDerivationLib;
 
 namespace KeyDerivationLibTests
 {
-    public class AccountKeyFactoryTests
+    public class DerivationKeyFactoryTests
     {
         [Test]
         public void AccountKeysAreDeterministic()
         {
-            var key1 = AccountKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
-            var key2 = AccountKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.WrongPgpIdentity);
+            var key1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
+            var key2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.WrongPgpIdentity);
 
             Assert.That(TestData.AccountKey1, Is.EqualTo(key1), "Key is not same as predicted");
             Assert.That(TestData.AccountKey2, Is.EqualTo(key2), "Key is not same as predicted");
@@ -33,8 +33,8 @@ namespace KeyDerivationLibTests
         [Test]
         public void AccountKeysAreDifferentWithMasterKey()
         {
-            var key1 = AccountKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
-            var key2 = AccountKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey2, TestData.GetAccount().GetPgpIdentity());
+            var key1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
+            var key2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey2, TestData.GetAccount().GetPgpIdentity());
 
             Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different MasterKey have to be different too");
         }
@@ -42,8 +42,8 @@ namespace KeyDerivationLibTests
         [Test]
         public void AccountKeysAreDifferentWithAccountId()
         {
-            var key1 = AccountKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
-            var key2 = AccountKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.WrongPgpIdentity);
+            var key1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
+            var key2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.WrongPgpIdentity);
 
             Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different userId have to be different too");
         }
@@ -51,10 +51,10 @@ namespace KeyDerivationLibTests
         [Test]
         public void AccountChildKeysAreDeterministic()
         {
-            var derivationKey = AccountKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
+            var derivationKey = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
 
-            var key1 = AccountKeyFactory.DerivePrivateChildKey(derivationKey, 0);
-            var key2 = AccountKeyFactory.DerivePrivateChildKey(derivationKey, 1);
+            var key1 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey, 0);
+            var key2 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey, 1);
 
             Assert.That(TestData.ChildKey1, Is.EqualTo(key1), "Key is not same as predicted");
             Assert.That(TestData.ChildKey2, Is.EqualTo(key2), "Key is not same as predicted");
@@ -63,11 +63,11 @@ namespace KeyDerivationLibTests
         [Test]
         public void AccountChildKeysAreDifferentWithMasterKey()
         {
-            var derivationKey1 = AccountKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
-            var derivationKey2 = AccountKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey2, TestData.GetAccount().GetPgpIdentity());
+            var derivationKey1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
+            var derivationKey2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey2, TestData.GetAccount().GetPgpIdentity());
 
-            var key1 = AccountKeyFactory.DerivePrivateChildKey(derivationKey1, 0);
-            var key2 = AccountKeyFactory.DerivePrivateChildKey(derivationKey2, 0);
+            var key1 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey1, 0);
+            var key2 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey2, 0);
 
             Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different MasterKey have to be different too");
         }
@@ -75,11 +75,11 @@ namespace KeyDerivationLibTests
         [Test]
         public void AccountChildKeysAreDifferentWithUserId()
         {
-            var derivationKey1 = AccountKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
-            var derivationKey2 = AccountKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey2, TestData.WrongPgpIdentity);
+            var derivationKey1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
+            var derivationKey2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey2, TestData.WrongPgpIdentity);
 
-            var key1 = AccountKeyFactory.DerivePrivateChildKey(derivationKey1, 0);
-            var key2 = AccountKeyFactory.DerivePrivateChildKey(derivationKey2, 0);
+            var key1 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey1, 0);
+            var key2 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey2, 0);
 
             Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different userId have to be different too");
         }
@@ -87,10 +87,10 @@ namespace KeyDerivationLibTests
         [Test]
         public void AccountChildKeysAreDifferentWithKeyIndex()
         {
-            var derivationKey = AccountKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
+            var derivationKey = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.GetAccount().GetPgpIdentity());
 
-            var key1 = AccountKeyFactory.DerivePrivateChildKey(derivationKey, 0);
-            var key2 = AccountKeyFactory.DerivePrivateChildKey(derivationKey, 1);
+            var key1 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey, 0);
+            var key2 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey, 1);
 
             Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different KeyIndex have to be different too");
         }
