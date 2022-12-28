@@ -21,10 +21,10 @@ namespace KeyDerivationLibTests
     public class KeySerializationTests
     {
         [Test]
-        public void SerializeDeserializePrivateKey()
+        public void SerializeDeserializePrivateDerivationKey()
         {
             var buffer = TestData.AccountKey1.ToByteBuffer();
-            PrivateKey privateKey = buffer.ToPrivateKey();
+            PrivateDrivationKey privateKey = buffer.ToPrivateDerivationKey();
 
             Assert.That(privateKey, Is.EqualTo(TestData.AccountKey1));
         }
