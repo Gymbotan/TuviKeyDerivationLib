@@ -65,12 +65,12 @@ namespace KeyDerivation.Keys
             {
                 if (value == null)
                 {
-                    throw new KeyCreationException($"Derivation key scalar can not be a null.");
+                    throw new KeyCreationException($"Derivation key chain code can not be a null.");
                 }
 
                 if (value.Length != KeyChainCodeLength)
                 {
-                    throw new KeyCreationException($"Derivation key scalar length should be equal to {KeyChainCodeLength} bytes.");
+                    throw new KeyCreationException($"Derivation key chain code length should be equal to {KeyChainCodeLength} bytes.");
                 }
 
                 chainCode = value;
