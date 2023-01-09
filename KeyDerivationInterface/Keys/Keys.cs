@@ -14,6 +14,7 @@
 //   limitations under the License.
 ///////////////////////////////////////////////////////////////////////////////
 
+using KeyDerivation.Entities;
 using System.Linq;
 
 namespace KeyDerivation.Keys
@@ -25,10 +26,56 @@ namespace KeyDerivation.Keys
 
     public class PrivateDrivationKey
     {
-#pragma warning disable CA1819 // Properties should not return arrays
-        public byte[] Scalar { get; set; }
+        private const int KeyChainCodeLength = 32;
+        private const int KeyScalarLength = 32;
+        private byte[] scalar;
+        private byte[] chainCode;
 
-        public byte[] ChainCode { get; set; }
+#pragma warning disable CA1819 // Properties should not return arrays
+        public byte[] Scalar 
+        { 
+            get
+            {
+                return scalar;
+            }
+
+            internal set
+            {
+                if (value == null)
+                {
+                    throw new KeyCreationException($"Derivation key scalar can not be a null.");
+                }
+
+                if (value.Length != KeyScalarLength)
+                {
+                    throw new KeyCreationException($"Derivation key scalar length should be equal to {KeyScalarLength} bytes.");
+                }
+
+                scalar = value;
+            }
+        }
+
+        public byte[] ChainCode {
+            get
+            {
+                return chainCode;
+            }
+
+            internal set
+            {
+                if (value == null)
+                {
+                    throw new KeyCreationException($"Derivation key chain code can not be a null.");
+                }
+
+                if (value.Length != KeyChainCodeLength)
+                {
+                    throw new KeyCreationException($"Derivation key chain code length should be equal to {KeyChainCodeLength} bytes.");
+                }
+
+                chainCode = value;
+            }
+        }
 #pragma warning restore CA1819 // Properties should not return arrays
 
         public override bool Equals(object obj)
