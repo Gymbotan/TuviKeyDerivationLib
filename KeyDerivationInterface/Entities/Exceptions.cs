@@ -14,28 +14,22 @@
 //   limitations under the License.
 ///////////////////////////////////////////////////////////////////////////////
 
-using KeyDerivation.Keys;
+using System;
 
-namespace KeyDerivationLibTests
+namespace KeyDerivation.Entities
 {
-    public class KeySerializationTests
+    public class KeyCreationException : Exception
     {
-        [Test]
-        public void SerializeDeserializePrivateDerivationKey()
+        public KeyCreationException()
         {
-            var buffer = TestData.DerivationKeyForSerialization.ToByteBuffer();
-            PrivateDrivationKey privateKey = buffer.ToPrivateDerivationKey();
-
-            Assert.That(privateKey, Is.EqualTo(TestData.DerivationKeyForSerialization));
         }
 
-        [Test]
-        public void SerializeDeserializeMasterKey()
+        public KeyCreationException(string message) : base(message)
         {
-            var buffer = TestData.MasterKey.ToByteBuffer();
-            MasterKey masterKey = buffer.ToMasterKey();
+        }
 
-            Assert.That(masterKey, Is.EqualTo(TestData.MasterKey));
+        public KeyCreationException(string message, Exception innerException) : base(message, innerException)
+        {
         }
     }
 }

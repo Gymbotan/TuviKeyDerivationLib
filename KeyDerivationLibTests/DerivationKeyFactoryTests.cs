@@ -26,8 +26,10 @@ namespace KeyDerivationLibTests
             var key1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
             var key2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.WrongTag);
 
-            Assert.That(TestData.PrivateDerivationKey1, Is.EqualTo(key1), "Key is not same as predicted");
-            Assert.That(TestData.PrivateDerivationKey2, Is.EqualTo(key2), "Key is not same as predicted");
+            Assert.That(TestData.PrivateDerivationKey1.scalar, Is.EqualTo(key1.Scalar), "Key is not same as predicted");
+            Assert.That(TestData.PrivateDerivationKey1.chainCode, Is.EqualTo(key1.ChainCode), "Key is not same as predicted");
+            Assert.That(TestData.PrivateDerivationKey2.scalar, Is.EqualTo(key2.Scalar), "Key is not same as predicted");
+            Assert.That(TestData.PrivateDerivationKey2.chainCode, Is.EqualTo(key2.ChainCode), "Key is not same as predicted");
         }
 
         [Test]
@@ -76,7 +78,7 @@ namespace KeyDerivationLibTests
         public void PrivateChildKeysAreDifferentWithTags()
         {
             var derivationKey1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
-            var derivationKey2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey2, TestData.WrongTag);
+            var derivationKey2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.WrongTag);
 
             var key1 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey1, 0);
             var key2 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey2, 0);
