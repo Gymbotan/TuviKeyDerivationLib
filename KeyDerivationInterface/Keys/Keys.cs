@@ -20,11 +20,11 @@ using System.Linq;
 namespace KeyDerivation.Keys
 {
     // Use this as Data Transfer Object only.
-    public class MasterKey : PrivateDrivationKey
+    public class MasterKey : PrivateDerivationKey
     {
     }
 
-    public class PrivateDrivationKey
+    public class PrivateDerivationKey
     {
         private const int KeyChainCodeLength = 32;
         private const int KeyScalarLength = 32;
@@ -80,7 +80,7 @@ namespace KeyDerivation.Keys
 
         public override bool Equals(object obj)
         {
-            if (obj is PrivateDrivationKey other)
+            if (obj is PrivateDerivationKey other)
             {
                 if ((Scalar == null && other.Scalar == null) ||
                      Scalar.SequenceEqual(other.Scalar))

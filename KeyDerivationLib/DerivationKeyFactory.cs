@@ -34,7 +34,7 @@ namespace KeyDerivationLib
         /// <param name="derivationKey">Derivation key.</param>
         /// <param name="tag">Tag to identify key(like user ID).</param>
         /// <returns>Private derivation key.</returns>
-        public static PrivateDrivationKey CreatePrivateDerivationKey(PrivateDrivationKey derivationKey, string tag)
+        public static PrivateDerivationKey CreatePrivateDerivationKey(PrivateDerivationKey derivationKey, string tag)
         {
             byte[] hashInput = derivationKey.ToByteBuffer();
 
@@ -51,7 +51,7 @@ namespace KeyDerivationLib
         /// <param name="index">Private child key index.</param>
         /// <returns>Private child key.</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static byte[] DerivePrivateChildKey(PrivateDrivationKey derivationKey, int index)
+        public static byte[] DerivePrivateChildKey(PrivateDerivationKey derivationKey, int index)
         {
             if (derivationKey is null)
             {

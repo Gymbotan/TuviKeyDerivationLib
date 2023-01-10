@@ -87,7 +87,7 @@ namespace KeyDerivationLibTests
             }
         );
 
-        public static PrivateDrivationKey DerivationKeyForSerialization = 
+        public static PrivateDerivationKey DerivationKeyForSerialization = 
             DerivationKeyFactory.CreatePrivateDerivationKey(MasterKey, RightTag);
 
         public static readonly byte[] PrivateChildKey1 = new byte[32]
