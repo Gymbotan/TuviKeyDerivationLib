@@ -35,11 +35,11 @@ namespace KeyDerivation.Keys
 
         public static byte[] ToByteBuffer(this MasterKey key)
         {
-            var privateKey = key as PrivateDrivationKey;
+            var privateKey = key as PrivateDerivationKey;
             return privateKey?.ToByteBuffer();
         }
 
-        public static PrivateDrivationKey ToPrivateDerivationKey(this byte[] buffer)
+        public static PrivateDerivationKey ToPrivateDerivationKey(this byte[] buffer)
         {
             byte[] scalar = new byte[PrivateKeyLength];
             byte[] chainCode = new byte[KeyChainCodeLength];
@@ -47,14 +47,14 @@ namespace KeyDerivation.Keys
             Buffer.BlockCopy(buffer, 0, scalar, 0, PrivateKeyLength);
             Buffer.BlockCopy(buffer, PrivateKeyLength, chainCode, 0, KeyChainCodeLength);
 
-            return new PrivateDrivationKey
+            return new PrivateDerivationKey
             {
                 Scalar = scalar,
                 ChainCode = chainCode
             };
         }
 
-        public static byte[] ToByteBuffer(this PrivateDrivationKey key)
+        public static byte[] ToByteBuffer(this PrivateDerivationKey key)
         {
             if (key == null)
             {

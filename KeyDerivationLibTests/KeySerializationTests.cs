@@ -24,7 +24,7 @@ namespace KeyDerivationLibTests
         public void SerializeDeserializePrivateDerivationKey()
         {
             var buffer = TestData.DerivationKeyForSerialization.ToByteBuffer();
-            PrivateDrivationKey privateKey = buffer.ToPrivateDerivationKey();
+            PrivateDerivationKey privateKey = buffer.ToPrivateDerivationKey();
 
             Assert.That(privateKey, Is.EqualTo(TestData.DerivationKeyForSerialization));
         }
