@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////////
-//   Copyright 2022 Eppie (https://eppie.io)
+//   Copyright 2023 Eppie (https://eppie.io)
 //
 //   Licensed under the Apache License, Version 2.0(the "License");
 //   you may not use this file except in compliance with the License.
@@ -15,7 +15,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 using KeyDerivation.Entities;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.X9;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Math.EC;
+using Org.BouncyCastle.Math.EC.Multiplier;
+using Org.BouncyCastle.Security;
 using System.Linq;
+using System.Numerics;
 
 namespace KeyDerivation.Keys
 {
@@ -26,8 +33,6 @@ namespace KeyDerivation.Keys
 
     public class PrivateDerivationKey
     {
-        private const int KeyChainCodeLength = 32;
-        private const int KeyScalarLength = 32;
         private byte[] scalar;
         private byte[] chainCode;
 
@@ -44,11 +49,6 @@ namespace KeyDerivation.Keys
                 if (value == null)
                 {
                     throw new KeyCreationException($"Derivation key scalar can not be a null.");
-                }
-
-                if (value.Length != KeyScalarLength)
-                {
-                    throw new KeyCreationException($"Derivation key scalar length should be equal to {KeyScalarLength} bytes.");
                 }
 
                 scalar = value;
@@ -68,15 +68,12 @@ namespace KeyDerivation.Keys
                     throw new KeyCreationException($"Derivation key chain code can not be a null.");
                 }
 
-                if (value.Length != KeyChainCodeLength)
-                {
-                    throw new KeyCreationException($"Derivation key chain code length should be equal to {KeyChainCodeLength} bytes.");
-                }
-
                 chainCode = value;
             }
         }
 #pragma warning restore CA1819 // Properties should not return arrays
+
+        public PublicDerivationKey PublicDerivationKey => new PublicDerivationKey(Scalar, ChainCode);
 
         public override bool Equals(object obj)
         {
@@ -105,28 +102,92 @@ namespace KeyDerivation.Keys
         }
     }
 
-    public class PgpPublicKeyBundle : PgpKeyBundle
+    public class PublicDerivationKey
     {
-    }
+        private const string BitcoinEllipticCurveName = "secp256k1";
+        private DerObjectIdentifier curveOid;
+        private ECKeyGenerationParameters keyParams;
 
-    public class PgpSecretKeyBundle : PgpKeyBundle
-    {
-    }
+        private readonly ECMultiplier multiplier = new FixedPointCombMultiplier();
 
-    public class PgpKeyBundle
-    {
+        private const int KeyChainCodeLength = 32;
+        private ECPoint publicKey; 
+        private byte[] chainCode;
+
+        private PublicDerivationKey()
+        {
+            curveOid = ECNamedCurveTable.GetOid(BitcoinEllipticCurveName);
+            keyParams = new ECKeyGenerationParameters(curveOid, new SecureRandom());
+        }
+
+        public PublicDerivationKey(byte[] privateKey, byte[] chainCode) : this()
+        {
+            PublicKey = multiplier.Multiply(keyParams.DomainParameters.G, new Org.BouncyCastle.Math.BigInteger(1, privateKey));
+            ChainCode = chainCode;
+        }
+
+        public PublicDerivationKey(ECPoint publicKey, byte[] chainCode) : this()
+        {
+            PublicKey = publicKey;
+            ChainCode = chainCode;
+        }
+
+        public ECKeyGenerationParameters KeyParams 
+        {
+            get => keyParams;
+        }
+
+        public ECPoint PublicKey
+        {
+            get 
+            { 
+                return publicKey; 
+            }
+
+            internal set
+            {
+                publicKey = value ?? throw new KeyCreationException($"Derivation public key can not be a null.");
+            }
+        }
+
 #pragma warning disable CA1819 // Properties should not return arrays
-        public byte[] Data { get; set; }
+        
+        public byte[] ChainCode
+        {
+            get
+            {
+                return chainCode;
+            }
+
+            internal set
+            {
+                if (value == null)
+                {
+                    throw new KeyCreationException($"Derivation key chain code can not be a null.");
+                }
+
+                if (value.Length != KeyChainCodeLength)
+                {
+                    throw new KeyCreationException($"Derivation key chain code length should be equal to {KeyChainCodeLength} bytes.");
+                }
+
+                chainCode = value;
+            }
+        }
 #pragma warning restore CA1819 // Properties should not return arrays
 
         public override bool Equals(object obj)
         {
-            if (obj is PgpKeyBundle other)
+            if (obj is PublicDerivationKey other)
             {
-                if ((Data == null && other.Data == null) ||
-                     Data.SequenceEqual(other.Data))
+                if ((PublicKey == null && other.PublicKey == null) ||
+                     PublicKey.GetEncoded().SequenceEqual(other.PublicKey.GetEncoded()))
                 {
-                    return true;
+                    if ((ChainCode == null && other.ChainCode == null) ||
+                         ChainCode.SequenceEqual(other.ChainCode))
+                    {
+                        return true;
+                    }
                 }
                 return false;
             }
