@@ -21,6 +21,7 @@ using System.Text;
 using KeyDerivation.Keys;
 using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Math.EC;
+using Org.BouncyCastle.Math;
 
 namespace KeyDerivationLib
 {
@@ -65,6 +66,34 @@ namespace KeyDerivationLib
                 ExtKey derivationExtKey = new ExtKey(eccKey, derivationKey.ChainCode);
                 return derivationExtKey.Derive(index).PrivateKey.ToBytes();
             }
+        }
+
+        private static PrivateDerivationKey ToPrivateDerivationKey(this byte[] buffer, PrivateDerivationKey oldKey)
+        {
+            if (oldKey == null)
+            {
+                throw new ArgumentNullException(nameof(oldKey));
+            }
+
+            const int KeyChainCodeLength = 32;
+            const int PrivateKeyLength = 32;
+
+            byte[] scalar = new byte[PrivateKeyLength];
+            byte[] chainCode = new byte[KeyChainCodeLength];
+
+            Buffer.BlockCopy(buffer, 0, scalar, 0, PrivateKeyLength);
+            Buffer.BlockCopy(buffer, PrivateKeyLength, chainCode, 0, KeyChainCodeLength);
+
+            BigInteger scalarNum = new BigInteger(1, scalar);
+            BigInteger oldKeyScalarNum = new BigInteger(1, oldKey.Scalar);
+
+            var result = scalarNum.Add(oldKeyScalarNum).Mod(oldKey.PublicDerivationKey.KeyParams.DomainParameters.N);
+            byte[] resultBytes = result.ToByteArrayUnsigned();
+            byte[] newScalar = new byte[PrivateKeyLength];
+            Buffer.BlockCopy(resultBytes, 0, newScalar, PrivateKeyLength - resultBytes.Length, resultBytes.Length);
+            Buffer.BlockCopy(newScalar, 0, buffer, 0, PrivateKeyLength);
+
+            return buffer.ToPrivateDerivationKey();
         }
     }
 
@@ -134,5 +163,27 @@ namespace KeyDerivationLib
             var keyBytes = DerivePublicChildKeyAsBytes(derivationKey, index);
             return ECNamedCurveTable.GetByName(BitcoinEllipticCurveName).Curve.DecodePoint(keyBytes);
         }
+
+        private static PublicDerivationKey ToPublicDerivationKey(this byte[] buffer, PublicDerivationKey oldKey)
+        {
+            if (oldKey == null)
+            {
+                throw new ArgumentNullException(nameof(oldKey));
+            }
+
+            const int KeyChainCodeLength = 32;
+            const int PrivateKeyLength = 32;
+
+            byte[] point = new byte[PrivateKeyLength];
+            byte[] chainCode = new byte[KeyChainCodeLength];
+
+            Buffer.BlockCopy(buffer, 0, point, 0, PrivateKeyLength);
+            Buffer.BlockCopy(buffer, PrivateKeyLength, chainCode, 0, KeyChainCodeLength);
+
+            PublicDerivationKey tempKey = new PublicDerivationKey(point, chainCode);
+
+            return new PublicDerivationKey(tempKey.PublicKey.Add(oldKey.PublicKey), chainCode);
+        }
+
     }
 }

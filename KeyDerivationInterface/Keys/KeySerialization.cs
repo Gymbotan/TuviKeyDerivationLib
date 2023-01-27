@@ -15,7 +15,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 using Org.BouncyCastle.Asn1.X9;
-using Org.BouncyCastle.Math;
 using System;
 
 namespace KeyDerivation.Keys
@@ -57,29 +56,19 @@ namespace KeyDerivation.Keys
             };
         }
 
-        public static PrivateDerivationKey ToPrivateDerivationKey(this byte[] buffer, PrivateDerivationKey oldKey)
+        public static byte[] ToByteBuffer(this PrivateDerivationKey key)
         {
-            if (oldKey == null)
+            if (key == null)
             {
-                throw new ArgumentNullException(nameof(oldKey));
+                throw new ArgumentNullException(nameof(key));
             }
 
-            byte[] scalar = new byte[PrivateKeyLength];
-            byte[] chainCode = new byte[KeyChainCodeLength];
+            byte[] buffer = new byte[KeyChainCodeLength + PrivateKeyLength];
 
-            Buffer.BlockCopy(buffer, 0, scalar, 0, PrivateKeyLength);
-            Buffer.BlockCopy(buffer, PrivateKeyLength, chainCode, 0, KeyChainCodeLength);
+            Buffer.BlockCopy(key.Scalar, 0, buffer, 0, PrivateKeyLength);
+            Buffer.BlockCopy(key.ChainCode, 0, buffer, PrivateKeyLength, KeyChainCodeLength);
 
-            BigInteger scalarNum = new BigInteger(1, scalar);
-            BigInteger oldKeyScalarNum = new BigInteger(1, oldKey.Scalar);
-
-            var result = scalarNum.Add(oldKeyScalarNum).Mod(oldKey.PublicDerivationKey.KeyParams.DomainParameters.N);
-            
-            return new PrivateDerivationKey
-            {
-                Scalar = result.ToByteArrayUnsigned(),
-                ChainCode = chainCode
-            };
+            return buffer;
         }
 
         public static PublicDerivationKey ToPublicDerivationKey(this byte[] buffer)
@@ -94,39 +83,6 @@ namespace KeyDerivation.Keys
             var ecPoint = ECNamedCurveTable.GetByName(CurveName).Curve.DecodePoint(point);
 
             return new PublicDerivationKey(ecPoint, chainCode);
-        }
-
-        public static PublicDerivationKey ToPublicDerivationKey(this byte[] buffer, PublicDerivationKey oldKey)
-        {
-            if (oldKey == null)
-            {
-                throw new ArgumentNullException(nameof(oldKey));
-            }
-
-            byte[] point = new byte[PrivateKeyLength];
-            byte[] chainCode = new byte[KeyChainCodeLength];
-
-            Buffer.BlockCopy(buffer, 0, point, 0, PrivateKeyLength);
-            Buffer.BlockCopy(buffer, PrivateKeyLength, chainCode, 0, KeyChainCodeLength);
-
-            PublicDerivationKey tempKey = new PublicDerivationKey(point, chainCode);
-
-            return new PublicDerivationKey(tempKey.PublicKey.Add(oldKey.PublicKey), chainCode);
-        }
-
-        public static byte[] ToByteBuffer(this PrivateDerivationKey key)
-        {
-            if (key == null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
-            byte[] buffer = new byte[KeyChainCodeLength + PrivateKeyLength];
-
-            Buffer.BlockCopy(key.Scalar, 0, buffer, 0, PrivateKeyLength);
-            Buffer.BlockCopy(key.ChainCode, 0, buffer, PrivateKeyLength, KeyChainCodeLength);
-
-            return buffer;
         }
 
         public static byte[] ToByteBuffer(this PublicDerivationKey key)

@@ -44,7 +44,8 @@ namespace KeyDerivationLibTests
             PublicDerivationKey initialKey = NewTestData.DerivationKeyForSerialization.PublicDerivationKey;
             var buffer = initialKey.ToByteBuffer();
             PublicDerivationKey publicKey = buffer.ToPublicDerivationKey();
-
+            var buf = publicKey.ToByteBuffer(); 
+            Assert.That(buffer, Is.EqualTo(buf));
             Assert.That(publicKey, Is.EqualTo(TestData.DerivationKeyForSerialization.PublicDerivationKey));
         }
 
