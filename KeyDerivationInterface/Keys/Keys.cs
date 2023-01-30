@@ -21,8 +21,8 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Math.EC.Multiplier;
 using Org.BouncyCastle.Security;
+using System;
 using System.Linq;
-using System.Numerics;
 
 namespace KeyDerivation.Keys
 {
@@ -31,14 +31,14 @@ namespace KeyDerivation.Keys
     {
     }
 
-    public class PrivateDerivationKey
+    public class PrivateDerivationKey : IEquatable<PrivateDerivationKey>
     {
         private byte[] scalar;
         private byte[] chainCode;
 
 #pragma warning disable CA1819 // Properties should not return arrays
-        public byte[] Scalar 
-        { 
+        public byte[] Scalar
+        {
             get
             {
                 return scalar;
@@ -55,7 +55,8 @@ namespace KeyDerivation.Keys
             }
         }
 
-        public byte[] ChainCode {
+        public byte[] ChainCode
+        {
             get
             {
                 return chainCode;
@@ -77,23 +78,22 @@ namespace KeyDerivation.Keys
 
         public override bool Equals(object obj)
         {
-            if (obj is PrivateDerivationKey other)
+            return Equals(obj as PrivateDerivationKey);
+        }
+
+        public bool Equals(PrivateDerivationKey other)
+        {
+            if (this == other)
             {
-                if ((Scalar == null && other.Scalar == null) ||
-                     Scalar.SequenceEqual(other.Scalar))
-                {
-                    if ((ChainCode == null && other.ChainCode == null) ||
-                         ChainCode.SequenceEqual(other.ChainCode))
-                    {
-                        return true;
-                    }
-                }
-                return false;
+                return true;
             }
-            else
+            if (other == null)
             {
                 return false;
             }
+
+            return Scalar.SequenceEqual(other.Scalar) &&
+                   ChainCode.SequenceEqual(other.ChainCode);
         }
 
         public override int GetHashCode()
@@ -102,7 +102,7 @@ namespace KeyDerivation.Keys
         }
     }
 
-    public class PublicDerivationKey
+    public class PublicDerivationKey : IEquatable<PublicDerivationKey>
     {
         private const string BitcoinEllipticCurveName = "secp256k1";
         private DerObjectIdentifier curveOid;
@@ -111,7 +111,7 @@ namespace KeyDerivation.Keys
         private readonly ECMultiplier multiplier = new FixedPointCombMultiplier();
 
         private const int KeyChainCodeLength = 32;
-        private ECPoint publicKey; 
+        private ECPoint publicKey;
         private byte[] chainCode;
 
         private PublicDerivationKey()
@@ -122,7 +122,7 @@ namespace KeyDerivation.Keys
 
         public PublicDerivationKey(byte[] privateKey, byte[] chainCode) : this()
         {
-            PublicKey = multiplier.Multiply(keyParams.DomainParameters.G, new Org.BouncyCastle.Math.BigInteger(1, privateKey));
+            PublicKey = multiplier.Multiply(keyParams.DomainParameters.G, new Org.BouncyCastle.Math.BigInteger(1, privateKey)).Normalize();
             ChainCode = chainCode;
         }
 
@@ -132,16 +132,16 @@ namespace KeyDerivation.Keys
             ChainCode = chainCode;
         }
 
-        public ECKeyGenerationParameters KeyParams 
+        public ECKeyGenerationParameters KeyParams
         {
             get => keyParams;
         }
 
         public ECPoint PublicKey
         {
-            get 
-            { 
-                return publicKey; 
+            get
+            {
+                return publicKey;
             }
 
             internal set
@@ -151,7 +151,7 @@ namespace KeyDerivation.Keys
         }
 
 #pragma warning disable CA1819 // Properties should not return arrays
-        
+
         public byte[] ChainCode
         {
             get
@@ -178,23 +178,22 @@ namespace KeyDerivation.Keys
 
         public override bool Equals(object obj)
         {
-            if (obj is PublicDerivationKey other)
+            return Equals(obj as PublicDerivationKey);
+        }
+
+        public bool Equals(PublicDerivationKey other)
+        {
+            if (this == other)
             {
-                if ((PublicKey == null && other.PublicKey == null) ||
-                     PublicKey.GetEncoded().SequenceEqual(other.PublicKey.GetEncoded()))
-                {
-                    if ((ChainCode == null && other.ChainCode == null) ||
-                         ChainCode.SequenceEqual(other.ChainCode))
-                    {
-                        return true;
-                    }
-                }
-                return false;
+                return true;
             }
-            else
+            if (other == null)
             {
                 return false;
             }
+
+            return PublicKey.Equals(other.PublicKey) &&
+                   ChainCode.SequenceEqual(other.ChainCode);
         }
 
         public override int GetHashCode()
