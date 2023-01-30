@@ -169,22 +169,6 @@ namespace KeyDerivationLibTests
             Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different KeyIndex have to be different too");
         }
 
-
-        //[Test]
-        //public void SomeTest()
-        //{
-        //    byte[] sk = new byte[] {
-        //        0xcc, 0xf6, 0xa0, 0xde, 0x4d, 0xc9, 0xcb, 0x52, 0xf6, 0xdf, 0xda, 0x87, 0xe1, 0x6d, 0x54, 0xaa,
-        //        0x99, 0x7c, 0x16, 0x00, 0x39, 0xd3, 0xcf, 0xfa, 0x19, 0x6a, 0xf6, 0xd5, 0xd2, 0xb9, 0xce, 0xb9
-        //    };
-        //    using (var eccKey = new Key(sk))
-        //    {
-        //        var a = eccKey.PubKey.ToBytes();
-        //        PubKey pk = new PubKey(a);
-        //        Assert.That(pk, Is.EqualTo(eccKey.PubKey));
-        //    }
-        //}
-
         [Test]
         public void CompareChildDerivatedKeys()
         {
@@ -199,8 +183,8 @@ namespace KeyDerivationLibTests
             ECPoint q = multiplier.Multiply(keyParams.DomainParameters.G, privateKey.D); // child public key from private key
 
             var publicDerivationKey = PublicDerivationKeyFactory.CreatePublicDerivationKey(NewTestData.MasterKey.PublicDerivationKey, NewTestData.RightTag);
-            var chPubKey = PublicDerivationKeyFactory.DerivePublicChildKeyAsBytes(publicDerivationKey, 0);
-            ECPoint q2 = keyParams.DomainParameters.Curve.DecodePoint(chPubKey); // child public key from public key
+            var childPublicKey = PublicDerivationKeyFactory.DerivePublicChildKeyAsBytes(publicDerivationKey, 0);
+            ECPoint q2 = keyParams.DomainParameters.Curve.DecodePoint(childPublicKey); // child public key from public key
 
             ECPoint q3 = PublicDerivationKeyFactory.DerivePublicChildKeyAsECPoint(publicDerivationKey, 0);
 

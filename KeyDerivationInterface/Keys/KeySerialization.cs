@@ -23,7 +23,7 @@ namespace KeyDerivation.Keys
     {
         public const int KeyChainCodeLength = 32;
         public const int PrivateKeyLength = 32;
-        public const int PublicKeyLength = 65;
+        public const int PublicKeyLength = 33;
 
         public static MasterKey ToMasterKey(this byte[] buffer)
         {
@@ -94,7 +94,7 @@ namespace KeyDerivation.Keys
 
             byte[] buffer = new byte[KeyChainCodeLength + PublicKeyLength];
 
-            Buffer.BlockCopy(key.PublicKey.GetEncoded(false), 0, buffer, 0, PublicKeyLength);
+            Buffer.BlockCopy(key.PublicKey.GetEncoded(true), 0, buffer, 0, PublicKeyLength);
             Buffer.BlockCopy(key.ChainCode, 0, buffer, PublicKeyLength, KeyChainCodeLength);
 
             return buffer;
