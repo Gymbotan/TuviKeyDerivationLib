@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////////
-//   Copyright 2022 Eppie (https://eppie.io)
+//   Copyright 2023 Eppie (https://eppie.io)
 //
 //   Licensed under the Apache License, Version 2.0(the "License");
 //   you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
 //   limitations under the License.
 ///////////////////////////////////////////////////////////////////////////////
 
+using Org.BouncyCastle.Asn1.X9;
 using System;
 
 namespace KeyDerivation.Keys
@@ -22,6 +23,7 @@ namespace KeyDerivation.Keys
     {
         public const int KeyChainCodeLength = 32;
         public const int PrivateKeyLength = 32;
+        public const int PublicKeyLength = 33;
 
         public static MasterKey ToMasterKey(this byte[] buffer)
         {
@@ -65,6 +67,35 @@ namespace KeyDerivation.Keys
 
             Buffer.BlockCopy(key.Scalar, 0, buffer, 0, PrivateKeyLength);
             Buffer.BlockCopy(key.ChainCode, 0, buffer, PrivateKeyLength, KeyChainCodeLength);
+
+            return buffer;
+        }
+
+        public static PublicDerivationKey ToPublicDerivationKey(this byte[] buffer)
+        {
+            byte[] point = new byte[PublicKeyLength];
+            byte[] chainCode = new byte[KeyChainCodeLength];
+
+            Buffer.BlockCopy(buffer, 0, point, 0, PublicKeyLength);
+            Buffer.BlockCopy(buffer, PublicKeyLength, chainCode, 0, KeyChainCodeLength);
+
+            string CurveName = "secp256k1";
+            var ecPoint = ECNamedCurveTable.GetByName(CurveName).Curve.DecodePoint(point);
+
+            return new PublicDerivationKey(ecPoint, chainCode);
+        }
+
+        public static byte[] ToByteBuffer(this PublicDerivationKey key)
+        {
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            byte[] buffer = new byte[KeyChainCodeLength + PublicKeyLength];
+
+            Buffer.BlockCopy(key.PublicKey.GetEncoded(true), 0, buffer, 0, PublicKeyLength);
+            Buffer.BlockCopy(key.ChainCode, 0, buffer, PublicKeyLength, KeyChainCodeLength);
 
             return buffer;
         }

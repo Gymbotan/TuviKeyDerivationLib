@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////////
-//   Copyright 2022 Eppie (https://eppie.io)
+//   Copyright 2023 Eppie (https://eppie.io)
 //
 //   Licensed under the Apache License, Version 2.0(the "License");
 //   you may not use this file except in compliance with the License.
@@ -37,5 +37,17 @@ namespace KeyDerivationLibTests
 
             Assert.That(masterKey, Is.EqualTo(TestData.MasterKey));
         }
+
+        [Test]
+        public void SerializeDeserializePublicDerivationKey()
+        {
+            PublicDerivationKey initialKey = NewTestData.DerivationKeyForSerialization.PublicDerivationKey;
+            var buffer = initialKey.ToByteBuffer();
+            PublicDerivationKey publicKey = buffer.ToPublicDerivationKey();
+            var buf = publicKey.ToByteBuffer(); 
+            Assert.That(buffer, Is.EqualTo(buf));
+            Assert.That(publicKey, Is.EqualTo(TestData.DerivationKeyForSerialization.PublicDerivationKey));
+        }
+
     }
 }
