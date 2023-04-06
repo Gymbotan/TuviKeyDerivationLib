@@ -83,17 +83,26 @@ namespace KeyDerivation.Keys
 
         public bool Equals(PrivateDerivationKey other)
         {
-            if (this == other)
-            {
-                return true;
-            }
-            if (other == null)
+            if (other is null)
             {
                 return false;
             }
-
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
             return Scalar.SequenceEqual(other.Scalar) &&
                    ChainCode.SequenceEqual(other.ChainCode);
+        }
+
+        public static bool operator ==(PrivateDerivationKey a, PrivateDerivationKey b)
+        {
+            return Equals(a, b);
+        }
+
+        public static bool operator !=(PrivateDerivationKey a, PrivateDerivationKey b)
+        {
+            return !(a == b);
         }
 
         public override int GetHashCode()
