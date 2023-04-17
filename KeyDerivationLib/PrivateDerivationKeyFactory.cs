@@ -16,10 +16,10 @@
 
 using NBitcoin.Crypto;
 using NBitcoin;
+using Org.BouncyCastle.Math;
 using System;
 using System.Text;
 using KeyDerivation.Keys;
-using Org.BouncyCastle.Math;
 
 namespace KeyDerivationLib
 {

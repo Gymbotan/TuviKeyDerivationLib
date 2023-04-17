@@ -17,10 +17,10 @@
 using KeyDerivation.Keys;
 using NBitcoin.Crypto;
 using NBitcoin;
-using System;
-using System.Text;
 using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Math.EC;
+using System;
+using System.Text;
 
 namespace KeyDerivationLib
 {
