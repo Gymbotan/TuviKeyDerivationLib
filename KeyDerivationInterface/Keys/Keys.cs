@@ -208,7 +208,7 @@ namespace KeyDerivation.Keys
 
         public override int GetHashCode()
         {
-            return publicKey.GetHashCode() + new BigInteger(ChainCode).GetHashCode();
+            return (publicKey, new BigInteger(ChainCode)).GetHashCode();
         }
     }
 }

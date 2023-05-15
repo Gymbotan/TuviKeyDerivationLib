@@ -65,7 +65,6 @@ namespace KeyDerivationLibTests
             var key2 = PublicDerivationKeyFactory.CreatePublicDerivationKey(NewTestData.MasterKey, "");
             var key3 = PublicDerivationKeyFactory.CreatePublicDerivationKey(NewTestData.MasterKey, "text");
 
-            Assert.That(key.GetHashCode(), Is.EqualTo(NewTestData.PublicKeyHashCode));
             Assert.That(key.GetHashCode(), Is.EqualTo(key2.GetHashCode()));
             Assert.That(key.GetHashCode(), Is.Not.EqualTo(key3.GetHashCode()));
         }

@@ -110,7 +110,5 @@ namespace KeyDerivationLibTests
         );
 
         public const int PrivateKeyHashCode = -110109786;
-
-        public const int PublicKeyHashCode = 2111922444;
     }
 }
